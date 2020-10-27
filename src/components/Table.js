@@ -1,122 +1,116 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+
+// MATERIAL-UI imports
+// import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import ExpandMoreSharpIcon from '@material-ui/icons/ExpandMoreSharp';
 
-const useStyles = makeStyles({
-    table: {
-        minWidth: 650,
-    },
-});
+// CUSTOM FILES import
+import TableLayout from './TableLayout';
+import RenderSortButton from './TableSortButtonRender';
 
-function createData(firstName, lastName, title, email, teamNumber) {
-    return { firstName, lastName, title, email, teamNumber };
-}
-
-const rows = [
-    createData('Ben', 'Dover', 'Junior Dev', 'bdover@fake-comp.com', 1),
-    createData('Mike', 'Rotchburns', 'Senior Dev', 'mrotchburns@fake-comp.com', 1),
-    createData('Ila', 'Vainal', 'Quality Assurance', 'ivainal@fake-comp.com', 1),
-    createData('Ivana', 'Tinkle', 'Tech Lead', 'itinkle@fake-comp.com', 1),
-    createData('Lee', 'Keyrear', 'Junior Dev', 'lkeyrear@fake-comp.com', 2),
-    createData('Harry', 'Azcrac', 'Senior Dev', 'hazcrac@fake-comp.com', 2),
-    createData('Anita', 'Bath', 'Quality Assurance', 'abath@fake-comp.com', 2),
-    createData('Jobe', 'Low', 'Tech Lead', 'jlow@fake-comp.com', 2),
-];
-
-const newSort = "";
-const lastSorted = "";
-
-// By extending the React.Component class, Counter inherits functionality from it
-class SortButton extends React.Component {
-
-
-    // Setting the initial state of the component to watch for
+export default class RenderTable extends React.Component {
     state = {
-        TableBody
-    };
+        firstNameButton: "down",
+        lastNameButton: "down",
+        titleButton: "down",
+        teamNumberButton: "up",
+        tableSortBy: "teamNumber",
+        isReverse: false
+    }
 
-    createButton = () => {
+    arrowChange = (event) => {
+        // event.stopPropagation();
+        // event.preventDefault();
+        this.state.tableSortBy = `${event.target.id}`;
+        console.log('table sort by === ', this.state.tableSortBy);
+        const name = `${event.target.id}Button`;
+        const direction = this.state[`${event.target.id}Button`];
+        const key = 0;
+        const value = 1;
 
-        return (
-            <button>
-                <ExpandMoreSharpIcon />
-            </button>
-        )
-    };
+        let stateArray = Object.entries(this.state);
+        console.log(stateArray);
 
-    sortBy = (sortType) => {
-        switch (sortType) {
-            case "firstName":
-                rows[0].sort();
-                break;
+        stateArray.forEach(keyValuePair => {
+            // turn all arrows down
+            if (keyValuePair[value] === "up") {
+                console.log(keyValuePair);
+                this.setState({
+                    [keyValuePair[key]]: "down"
+                });
+            }
+        });
 
-            default:
-                break;
-        }
-    };
-
-    sortRows = (sortType, isSwitch) => {
-        if (isSwitch) {
-            this.sortBy(sortType).reverse();
+        //  change the arrow of the button clicked
+        if (direction === "down") {
+            console.log(`the state of "${this.state.tableSortBy}'s" direction is "${direction}"`);
+            this.setState({
+                [name]: "up",
+                isReverse: true
+            });
+        } else if (direction === "up") {
+            console.log(`the state of "${this.state.tableSortBy}'s" direction is "${direction}"`);
+            this.setState({
+                [name]: "down",
+                isReverse: false
+            });
         } else {
-            this.sortBy(sortType);
+            console.log(`problem with direction's var value ... this "${this.state.tableSortBy}" has a value of "${direction}"`);
         }
-    };
+        
+        return event.target.arrowDirection = this.state[this.state.tableSortBy];
 
-    determineSort = () => {
-        if (this.newSort === this.lastSorted) {
-            this.sortRows(newSort, "switch");
-        } else {
-            this.sortRows(newSort);
-        }
-    };
+    }
 
     render() {
         return (
-            <button>
-                <ExpandMoreSharpIcon />
-            </button>
-        )
+            <div>
+                <TableContainer component={Paper}>
+                    <Table aria-label="employee table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>First Name<RenderSortButton
+                                    id={"firstName"}
+                                    arrowDirection={this.state.firstNameButton}
+                                    handleArrowChange={this.arrowChange}
+                                />
+                                </TableCell>
+                                <TableCell align="right">Last Name<RenderSortButton
+                                    id={"lastName"}
+                                    arrowDirection={this.state.lastNameButton}
+                                    handleArrowChange={this.arrowChange}
+                                />
+                                </TableCell>
+                                <TableCell align="right">Title<RenderSortButton
+                                    id={"title"}
+                                    arrowDirection={this.state.titleButton}
+                                    handleArrowChange={this.arrowChange}
+                                />
+                                </TableCell>
+                                <TableCell align="right">Email
+                                </TableCell>
+                                <TableCell align="right">Team Number<RenderSortButton
+                                    id={"teamNumber"}
+                                    arrowDirection={this.state.teamNumberButton}
+                                    handleArrowChange={this.arrowChange}
+                                />
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+
+                        <TableLayout 
+                            sortBy={this.state.tableSortBy}
+                            isReverse={this.state.isReverse}
+                        />
+
+                    </Table>
+                </TableContainer>
+            </div>
+        );
     }
-
-}
-
-export default function BasicTable() {
-    const classes = useStyles();
-
-    return (
-        <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="employee table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>First Name<SortButton /></TableCell>
-                        <TableCell align="right">Last Name</TableCell>
-                        <TableCell align="right">Title</TableCell>
-                        <TableCell align="right">Email</TableCell>
-                        <TableCell align="right">Team Number</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map((row, index) => (
-                        <TableRow key={index}>
-                            <TableCell component="th" scope="row">
-                                {row.firstName}
-                            </TableCell>
-                            <TableCell align="right">{row.lastName}</TableCell>
-                            <TableCell align="right">{row.title}</TableCell>
-                            <TableCell align="right">{row.email}</TableCell>
-                            <TableCell align="right">{row.teamNumber}</TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
-    );
-}
+};
