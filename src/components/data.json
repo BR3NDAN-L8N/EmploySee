@@ -1,0 +1,57 @@
+[{
+        "firstName": "Ben",
+        "lastName": "Dover",
+        "title": "Junior Dev",
+        "email": "bdover@fake-comp.com",
+        "teamNumber": 1
+    },
+    {
+        "firstName": "Ilah",
+        "lastName": "Vainal",
+        "title": "Quality Assurance",
+        "email": "ivainal@fake-comp.com",
+        "teamNumber": 1
+    },
+    {
+        "firstName": "Mike",
+        "lastName": "Hawk",
+        "title": "Tech Lead",
+        "email": "mhawk@fake-comp.com",
+        "teamNumber": 1
+    },
+    {
+        "firstName": "Mike",
+        "lastName": "Rotchburns",
+        "title": "Senior Dev",
+        "email": "mrotchburns@fake-comp.com",
+        "teamNumber": 1
+    },
+    {
+        "firstName": "Dixie",
+        "lastName": "Normous",
+        "title": "Tech Lead",
+        "email": "dmormous@fake-comp.com",
+        "teamNumber": 2
+    },
+    {
+        "firstName": "Harry",
+        "lastName": "Azcrac",
+        "title": "Senior Dev",
+        "email": "hazcrac@fake-comp.com",
+        "teamNumber": 2
+    },
+    {
+        "firstName": "Lee",
+        "lastName": "Keyrear",
+        "title": "Junior Dev",
+        "email": "lkeyrear@fake-comp.com",
+        "teamNumber": 2
+    },
+    {
+        "firstName": "Mia",
+        "lastName": "Rection",
+        "title": "Quality Assurance",
+        "email": "mrection@fake-comp.com",
+        "teamNumber": 2
+    }
+]

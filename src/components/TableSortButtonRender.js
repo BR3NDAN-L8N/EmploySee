@@ -8,10 +8,7 @@ const RenderSortButton = (props) => {
 
     return (
         <button onClick={props.handleArrowChange} id={props.id} data-arrow-direction={props.arrowDirection}>
-        {/* // <div onClick={props.handleArrowChange} id={props.id} data-arrow-direction={props.arrowDirection}> */}
-            {props.arrowDirection === "up" ? <ExpandLessSharpIcon /> : <ExpandMoreSharpIcon />}
-        {/* </div> */}
-
+            {props.arrowDirection === "up" ? <ExpandLessSharpIcon onClick={props.handleArrowChange} id={props.id} data-arrow-direction={props.arrowDirection}/> : <ExpandMoreSharpIcon onClick={props.handleArrowChange} id={props.id} data-arrow-direction={props.arrowDirection} />}
         </button>
     )
 }

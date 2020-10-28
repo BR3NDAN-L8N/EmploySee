@@ -12,16 +12,21 @@ import Paper from '@material-ui/core/Paper';
 // CUSTOM FILES import
 import TableLayout from './TableLayout';
 import RenderSortButton from './TableSortButtonRender';
+import TableData from "./TableData";
+import data from "./data.json";
 
 export default class RenderTable extends React.Component {
     state = {
-        firstNameButton: "down",
-        lastNameButton: "down",
-        titleButton: "down",
-        teamNumberButton: "up",
+        firstNameButton: "up",
+        lastNameButton: "up",
+        titleButton: "up",
+        teamNumberButton: "down",
         tableSortBy: "teamNumber",
-        isReverse: false
+        isReverse: false,
+        rows:data
     }
+
+
 
     arrowChange = (event) => {
         // event.stopPropagation();
@@ -38,10 +43,10 @@ export default class RenderTable extends React.Component {
 
         stateArray.forEach(keyValuePair => {
             // turn all arrows down
-            if (keyValuePair[value] === "up") {
+            if (keyValuePair[value] === "down") {
                 console.log(keyValuePair);
                 this.setState({
-                    [keyValuePair[key]]: "down"
+                    [keyValuePair[key]]: "up"
                 });
             }
         });
@@ -106,6 +111,7 @@ export default class RenderTable extends React.Component {
                         <TableLayout 
                             sortBy={this.state.tableSortBy}
                             isReverse={this.state.isReverse}
+                            rows={this.state.rows}
                         />
 
                     </Table>
