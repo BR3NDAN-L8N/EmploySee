@@ -10,8 +10,6 @@ import SortTable from './TableSort';
 
 const TableLayout = (props) => {
 
-    // const { sortBy, isReverse } = props;
-
     const rowsArray = (props) => {
         return SortTable(props);
     }

@@ -12,7 +12,6 @@ import Paper from '@material-ui/core/Paper';
 // CUSTOM FILES import
 import TableLayout from './TableLayout';
 import RenderSortButton from './TableSortButtonRender';
-import TableData from "./TableData";
 import data from "./data.json";
 
 export default class RenderTable extends React.Component {
@@ -21,30 +20,54 @@ export default class RenderTable extends React.Component {
         lastNameButton: "up",
         titleButton: "up",
         teamNumberButton: "down",
+        filterBy: "",
         tableSortBy: "teamNumber",
         isReverse: false,
-        rows:data
+        rows: data,
+    };
+
+    stateArray = () => {
+        //  Convert the React state into an array
+        let stateArray = Object.entries(this.state);
+        return stateArray;
+    };
+
+    handleFilterInput = (event) => {
+        // Getting the value and name of the input which triggered the change
+        let value = event.target.value;
+
+
+        // Updating the input's state
+        this.setState({
+            filterBy: value
+        });
+    };
+
+    filterRows = () => {
+        // let newRows;
+        if (this.state.filterBy !== "") {
+            this.setState({
+                rows: this.state.rows.filter(row => row.title === this.state.filterBy)
+            });
+        }
     }
 
-
+    refreshRows = () => {
+        this.setState({
+            rows: data
+        });
+    };
 
     arrowChange = (event) => {
-        // event.stopPropagation();
-        // event.preventDefault();
-        this.state.tableSortBy = `${event.target.id}`;
-        console.log('table sort by === ', this.state.tableSortBy);
+        this.state.tableSortBy = event.target.id;
         const name = `${event.target.id}Button`;
         const direction = this.state[`${event.target.id}Button`];
         const key = 0;
         const value = 1;
 
-        let stateArray = Object.entries(this.state);
-        console.log(stateArray);
-
-        stateArray.forEach(keyValuePair => {
-            // turn all arrows down
+        // turn all arrows up for a default position
+        this.stateArray().forEach(keyValuePair => {
             if (keyValuePair[value] === "down") {
-                console.log(keyValuePair);
                 this.setState({
                     [keyValuePair[key]]: "up"
                 });
@@ -53,13 +76,11 @@ export default class RenderTable extends React.Component {
 
         //  change the arrow of the button clicked
         if (direction === "down") {
-            console.log(`the state of "${this.state.tableSortBy}'s" direction is "${direction}"`);
             this.setState({
                 [name]: "up",
                 isReverse: true
             });
         } else if (direction === "up") {
-            console.log(`the state of "${this.state.tableSortBy}'s" direction is "${direction}"`);
             this.setState({
                 [name]: "down",
                 isReverse: false
@@ -67,14 +88,32 @@ export default class RenderTable extends React.Component {
         } else {
             console.log(`problem with direction's var value ... this "${this.state.tableSortBy}" has a value of "${direction}"`);
         }
-        
+
         return event.target.arrowDirection = this.state[this.state.tableSortBy];
 
+    }
+
+    handleRows = () => {
+        // return this.state.filterBy !== "" ? this.state.rows : this.state.filteredRows;
+        return this.state.rows;
     }
 
     render() {
         return (
             <div>
+                <input
+                    placeholder={"Filter by job title"}
+                    value={this.state.filterBy}
+                    onChange={this.handleFilterInput}
+                ></input>
+                <button
+                    type={'button'}
+                    onClick={this.filterRows}
+                >Filter</button>
+                <button
+                    type={'button'}
+                    onClick={this.refreshRows}
+                >Refresh</button>
                 <TableContainer component={Paper}>
                     <Table aria-label="employee table">
                         <TableHead>
@@ -108,7 +147,7 @@ export default class RenderTable extends React.Component {
                             </TableRow>
                         </TableHead>
 
-                        <TableLayout 
+                        <TableLayout
                             sortBy={this.state.tableSortBy}
                             isReverse={this.state.isReverse}
                             rows={this.state.rows}

@@ -1,8 +1,6 @@
 import React from 'react';
+
 import RenderTable from './components/Table';
-// import 'index.css';
-// import RenderTable from "./components/Table";
-// import RenderTable from "./components/Table";
 
 const App = () => {
     return (
@@ -15,7 +13,9 @@ const App = () => {
                     The easy way to see employees.
                 </h2>
             </header>
-            <RenderTable />
+            <main>
+                <RenderTable />
+            </main>
         </div>
     );
 }
