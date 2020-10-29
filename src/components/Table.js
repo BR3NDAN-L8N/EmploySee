@@ -1,122 +1,161 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+
+// MATERIAL-UI imports
+// import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import ExpandMoreSharpIcon from '@material-ui/icons/ExpandMoreSharp';
 
-const useStyles = makeStyles({
-    table: {
-        minWidth: 650,
-    },
-});
+// CUSTOM FILES import
+import TableLayout from './TableLayout';
+import RenderSortButton from './TableSortButtonRender';
+import data from "./data.json";
 
-function createData(firstName, lastName, title, email, teamNumber) {
-    return { firstName, lastName, title, email, teamNumber };
-}
-
-const rows = [
-    createData('Ben', 'Dover', 'Junior Dev', 'bdover@fake-comp.com', 1),
-    createData('Mike', 'Rotchburns', 'Senior Dev', 'mrotchburns@fake-comp.com', 1),
-    createData('Ila', 'Vainal', 'Quality Assurance', 'ivainal@fake-comp.com', 1),
-    createData('Ivana', 'Tinkle', 'Tech Lead', 'itinkle@fake-comp.com', 1),
-    createData('Lee', 'Keyrear', 'Junior Dev', 'lkeyrear@fake-comp.com', 2),
-    createData('Harry', 'Azcrac', 'Senior Dev', 'hazcrac@fake-comp.com', 2),
-    createData('Anita', 'Bath', 'Quality Assurance', 'abath@fake-comp.com', 2),
-    createData('Jobe', 'Low', 'Tech Lead', 'jlow@fake-comp.com', 2),
-];
-
-const newSort = "";
-const lastSorted = "";
-
-// By extending the React.Component class, Counter inherits functionality from it
-class SortButton extends React.Component {
-
-
-    // Setting the initial state of the component to watch for
+export default class RenderTable extends React.Component {
     state = {
-        TableBody
+        firstNameButton: "up",
+        lastNameButton: "up",
+        titleButton: "up",
+        teamNumberButton: "down",
+        filterBy: "",
+        tableSortBy: "teamNumber",
+        isReverse: false,
+        rows: data,
     };
 
-    createButton = () => {
-
-        return (
-            <button>
-                <ExpandMoreSharpIcon />
-            </button>
-        )
+    stateArray = () => {
+        //  Convert the React state into an array
+        let stateArray = Object.entries(this.state);
+        return stateArray;
     };
 
-    sortBy = (sortType) => {
-        switch (sortType) {
-            case "firstName":
-                rows[0].sort();
-                break;
+    handleFilterInput = (event) => {
+        // Getting the value and name of the input which triggered the change
+        let value = event.target.value;
 
-            default:
-                break;
+
+        // Updating the input's state
+        this.setState({
+            filterBy: value
+        });
+    };
+
+    filterRows = () => {
+        // let newRows;
+        if (this.state.filterBy !== "") {
+            this.setState({
+                rows: this.state.rows.filter(row => row.title === this.state.filterBy)
+            });
         }
+    }
+
+    refreshRows = () => {
+        this.setState({
+            rows: data
+        });
     };
 
-    sortRows = (sortType, isSwitch) => {
-        if (isSwitch) {
-            this.sortBy(sortType).reverse();
+    arrowChange = (event) => {
+        this.state.tableSortBy = event.target.id;
+        const name = `${event.target.id}Button`;
+        const direction = this.state[`${event.target.id}Button`];
+        const key = 0;
+        const value = 1;
+
+        // turn all arrows up for a default position
+        this.stateArray().forEach(keyValuePair => {
+            if (keyValuePair[value] === "down") {
+                this.setState({
+                    [keyValuePair[key]]: "up"
+                });
+            }
+        });
+
+        //  change the arrow of the button clicked
+        if (direction === "down") {
+            this.setState({
+                [name]: "up",
+                isReverse: true
+            });
+        } else if (direction === "up") {
+            this.setState({
+                [name]: "down",
+                isReverse: false
+            });
         } else {
-            this.sortBy(sortType);
+            console.log(`problem with direction's var value ... this "${this.state.tableSortBy}" has a value of "${direction}"`);
         }
-    };
 
-    determineSort = () => {
-        if (this.newSort === this.lastSorted) {
-            this.sortRows(newSort, "switch");
-        } else {
-            this.sortRows(newSort);
-        }
-    };
+        return event.target.arrowDirection = this.state[this.state.tableSortBy];
+
+    }
+
+    handleRows = () => {
+        // return this.state.filterBy !== "" ? this.state.rows : this.state.filteredRows;
+        return this.state.rows;
+    }
 
     render() {
         return (
-            <button>
-                <ExpandMoreSharpIcon />
-            </button>
-        )
+            <div>
+                <input
+                    placeholder={"Filter by job title"}
+                    value={this.state.filterBy}
+                    onChange={this.handleFilterInput}
+                ></input>
+                <button
+                    type={'button'}
+                    onClick={this.filterRows}
+                >Filter</button>
+                <button
+                    type={'button'}
+                    onClick={this.refreshRows}
+                >Refresh</button>
+                <TableContainer component={Paper}>
+                    <Table aria-label="employee table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>First Name<RenderSortButton
+                                    id={"firstName"}
+                                    arrowDirection={this.state.firstNameButton}
+                                    handleArrowChange={this.arrowChange}
+                                />
+                                </TableCell>
+                                <TableCell align="right">Last Name<RenderSortButton
+                                    id={"lastName"}
+                                    arrowDirection={this.state.lastNameButton}
+                                    handleArrowChange={this.arrowChange}
+                                />
+                                </TableCell>
+                                <TableCell align="right">Title<RenderSortButton
+                                    id={"title"}
+                                    arrowDirection={this.state.titleButton}
+                                    handleArrowChange={this.arrowChange}
+                                />
+                                </TableCell>
+                                <TableCell align="right">Email
+                                </TableCell>
+                                <TableCell align="right">Team Number<RenderSortButton
+                                    id={"teamNumber"}
+                                    arrowDirection={this.state.teamNumberButton}
+                                    handleArrowChange={this.arrowChange}
+                                />
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+
+                        <TableLayout
+                            sortBy={this.state.tableSortBy}
+                            isReverse={this.state.isReverse}
+                            rows={this.state.rows}
+                        />
+
+                    </Table>
+                </TableContainer>
+            </div>
+        );
     }
-
-}
-
-export default function BasicTable() {
-    const classes = useStyles();
-
-    return (
-        <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="employee table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>First Name<SortButton /></TableCell>
-                        <TableCell align="right">Last Name</TableCell>
-                        <TableCell align="right">Title</TableCell>
-                        <TableCell align="right">Email</TableCell>
-                        <TableCell align="right">Team Number</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map((row, index) => (
-                        <TableRow key={index}>
-                            <TableCell component="th" scope="row">
-                                {row.firstName}
-                            </TableCell>
-                            <TableCell align="right">{row.lastName}</TableCell>
-                            <TableCell align="right">{row.title}</TableCell>
-                            <TableCell align="right">{row.email}</TableCell>
-                            <TableCell align="right">{row.teamNumber}</TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
-    );
-}
+};

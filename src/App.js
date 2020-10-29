@@ -1,8 +1,8 @@
 import React from 'react';
-// import 'index.css';
-import Table from "./components/Table";
 
-function App() {
+import RenderTable from './components/Table';
+
+const App = () => {
     return (
         <div className="App">
             <header className="App-header">
@@ -12,12 +12,10 @@ function App() {
                 <h2>
                     The easy way to see employees.
                 </h2>
-                <p>
-                    View Employees
-                </p>
-
             </header>
-            <Table />
+            <main>
+                <RenderTable />
+            </main>
         </div>
     );
 }
