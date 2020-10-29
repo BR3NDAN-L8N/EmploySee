@@ -30,7 +30,7 @@
   ## Finished Project
   
   <!-- Add deployed link when available -->
-  [Deployed Site](https://millennial-money-manager.herokuapp.com/)
+  [Deployed Site](https://br3ndan-l8n.github.io/EmploySee/)
   
   ## Project Demo
   
